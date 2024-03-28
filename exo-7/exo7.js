@@ -17,18 +17,16 @@ let trad = {
     "show": "Spectacle"
 }
 
-jsonDatas.forEach(data => {
-    Object.keys(trad).forEach(keyTrad => {
-        if (keyTrad === data.type) {
-            data.trad = trad[keyTrad]
-        }
-    })
-})
-
 let addItem = () => {
     jsonDatas.forEach(data => {
         content = document.createElement("div")
         content.className = "item"
+
+        Object.keys(trad).forEach(keyTrad => {
+            if (keyTrad === data.type) {
+                data.trad = trad[keyTrad]
+            }
+        })
 
         for (i = 0; i < Object.keys(data).length; i++) {
             p = document.createElement("p")
@@ -39,6 +37,36 @@ let addItem = () => {
 
         main.appendChild(content)
     })
+}
+
+let sortBy = (desc = false) => {
+    div = document.querySelectorAll("div.item")
+
+    if (opt.value !== "") {
+        jsonDatas.sort((a, b) => {
+            if (opt.value === "name") {
+                if (a.name < b.name) {
+                    return desc ? -1 : 1
+                } else {
+                    return desc ? 1 : 1
+                }
+            }
+
+            if (opt.value === "price") {
+                if (a.price < b.price) {
+                    return desc ? -1 : 1
+                } else {
+                    return desc ? 1 : 1
+                }
+            }
+        })
+
+        div.forEach(div => {
+            div.remove()
+        })
+
+        addItem()
+    }
 }
 
 submitBtn.addEventListener("click", () => {
@@ -78,37 +106,8 @@ cBox.addEventListener("change", e => {
     })
 })
 
-let sortBy = (asc = false) => {
-    div = document.querySelectorAll("div.item")
-
-    if (opt.value !== "") {
-        jsonDatas.sort((a, b) => {
-            if (opt.value === "name") {
-                if (a.name < b.name) {
-                    return asc ? -1 : 1
-                } else {
-                    return asc ? 1 : 1
-                }
-            }
-
-            if (opt.value === "price") {
-                if (a.price < b.price) {
-                    return asc ? -1 : 1
-                } else {
-                    return asc ? 1 : 1
-                }
-            }
-        })
-
-        div.forEach(div => {
-            div.remove()
-        })
-
-        addItem()
-    }
-}
-
 opt.addEventListener("change", () => {
+    sortBtn.childNodes[1].classList.remove("rotate");
     sortBy()
 })
 
@@ -129,7 +128,3 @@ sortBtn.addEventListener("click", e => {
  */
 
 addItem()
-
-jsonDatas.forEach(data => {
-    // console.log(data)
-})
